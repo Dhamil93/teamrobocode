@@ -18,6 +18,10 @@ public class ER extends TeamRobot
 	public void run() {
 		// Initialization of the robot should be put here
 
+		setBodyColor(new Color(148,0,211));
+		setGunColor(new Color(148,0,211));
+		setRadarColor(new Color(148,0,211));
+		setScanColor(new Color(148,0,211));
 		// After trying out your robot, try uncommenting the import at the top,
 		// and the next line:
 
@@ -28,13 +32,13 @@ public class ER extends TeamRobot
 		while(true) {
 			// Replace the next 4 lines with any behavior you would like
 			setTurnRadarRight(10000);
-			back(75);
+			back(66);
 			if (x!=0) shoot();
-			back(75);
+			back(66);
 			if (x!=0) shoot();
-			ahead(75);
+			ahead(66);
 			if (x!=0) shoot();
-			ahead(75);
+			ahead(66);
 			if (x!=0) shoot();
 			
 		}
