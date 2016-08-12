@@ -30,9 +30,8 @@ public class Spec extends AdvancedRobot {
 	public void run() {
 		System.out.println("Missed times: " + missedTimes);
 		scanDir = 1;
-	    enemyHashMap = new LinkedHashMap<String, Double>(5, 2, true);
-	 
-		
+		enemyHashMap = new LinkedHashMap<String, Double>(5, 2, true);
+
 		setColors(Color.gray, null, Color.red);
 		enemies = new Hashtable();
 		Point2D next = currentTarget = null;
@@ -47,15 +46,12 @@ public class Spec extends AdvancedRobot {
 				double angle = 0, distance;
 				do {
 					Point2D p;
-					if (new Rectangle2D.Double(30, 30,
-							getBattleFieldWidth() - 60,
-							getBattleFieldHeight() - 60)
+					if (new Rectangle2D.Double(30, 30, getBattleFieldWidth() - 60, getBattleFieldHeight() - 60)
 							// utilizes the projectPoint method to find the
 							// enemy's
 							// coordinates
-							.contains(p = projectPoint(myLocation, angle, Math
-									.min((distance = myLocation
-											.distance(currentTarget)) / 2, 300)))
+							.contains(p = projectPoint(myLocation, angle,
+									Math.min((distance = myLocation.distance(currentTarget)) / 2, 300)))
 							&& findRisk(p) < findRisk(next)) {
 						changed = true;
 						next = p;
@@ -70,38 +66,30 @@ public class Spec extends AdvancedRobot {
 					// becomes my last locaiton
 					last = myLocation;
 				}
-				if(getGunTurnRemaining() == 0) {
-				if (linearTarget == true) {
-					// calculation of what power to use
-					// won't fire at all if my energy is too low
-					// and the enemy is very far away=
-					// low reward for high risk
-					if (getEnergy() / distance > .005) {
-						setFire(60
-								* Math.min(currentTarget.energy, getEnergy())
-								/ distance);
+				if (getGunTurnRemaining() == 0) {
+					if (linearTarget == true) {
+						// calculation of what power to use
+						// won't fire at all if my energy is too low
+						// and the enemy is very far away=
+						// low reward for high risk
+						if (getEnergy() / distance > .005) {
+							setFire(60 * Math.min(currentTarget.energy, getEnergy()) / distance);
+						}
+						setTurnGunRightRadians(robocode.util.Utils
+								.normalRelativeAngle(angle(currentTarget, myLocation) - getGunHeadingRadians()));
+					} else {
+						setTurnGunRightRadians(linearTargeting());
+						setFire(60 * Math.min(currentTarget.energy, getEnergy()) / distance);
 					}
-					setTurnGunRightRadians(robocode.util.Utils
-							.normalRelativeAngle(angle(currentTarget,
-									myLocation) - getGunHeadingRadians()));
-				} else {
-					setTurnGunRightRadians(linearTargeting());
-					setFire(60
-							* Math.min(currentTarget.energy, getEnergy())
-							/ distance);
-				}
 				}
 				double turn;
-				if (Math.cos(turn = angle(next, myLocation)
-						- getHeadingRadians()) < 0) {
+				if (Math.cos(turn = angle(next, myLocation) - getHeadingRadians()) < 0) {
 					turn += Math.PI;
 					distance = -distance;
 					// to stop linear targeters
 				}
-				setTurnRightRadians(robocode.util.Utils
-						.normalRelativeAngle(turn));
-				setAhead((Math.abs(getTurnRemainingRadians()) > 1) ? 0
-						: distance);
+				setTurnRightRadians(robocode.util.Utils.normalRelativeAngle(turn));
+				setAhead((Math.abs(getTurnRemainingRadians()) > 1) ? 0 : distance);
 			}
 			// updates the lastseen time to allow radar to spin toward the robot
 			// it has not seen in the longest time
@@ -120,8 +108,7 @@ public class Spec extends AdvancedRobot {
 		// Altogether, it encourages the robot to keep moving (and get hit
 		// less!)
 		// by assigning risk to its previous points
-		double risk = 4 / last.distanceSq(point) + .1
-				/ myLocation.distanceSq(point);
+		double risk = 4 / last.distanceSq(point) + .1 / myLocation.distanceSq(point);
 
 		Enumeration enum1 = enemies.elements();
 		do {
@@ -129,9 +116,7 @@ public class Spec extends AdvancedRobot {
 			// start with an anti-gravity-type value that calculates the risk
 			// based on energy and distance of enemybots
 
-			double thisrisk = Math.max(getEnergy(),
-					(e = (EnemyInfo) enum1.nextElement()).energy)
-					/ point.distanceSq(e);
+			double thisrisk = Math.max(getEnergy(), (e = (EnemyInfo) enum1.nextElement()).energy) / point.distanceSq(e);
 
 			int closer = 0;
 			Enumeration enum2 = enemies.elements();
@@ -142,8 +127,7 @@ public class Spec extends AdvancedRobot {
 				// combined with other bots that are far away
 				// may raise closer above one, not triggering the if statement
 				// below, increasing the risk
-				if (.9 * e.distance((EnemyInfo) enum2.nextElement()) > e
-						.distance(point)) {
+				if (.9 * e.distance((EnemyInfo) enum2.nextElement()) > e.distance(point)) {
 					closer++;
 				}
 			while (enum2.hasMoreElements());
@@ -152,11 +136,9 @@ public class Spec extends AdvancedRobot {
 			// small or I hit this enemy not more than 2 ticks ago (making it
 			// likely to target me)
 			// or if the enemy within range has
-			if (closer <= 1 || e.lastHit > getTime() - 200
-					|| e == currentTarget) {
+			if (closer <= 1 || e.lastHit > getTime() - 200 || e == currentTarget) {
 
-				thisrisk *= 1 + Math.abs(Math.cos(angle(myLocation, point)
-						- angle(e, myLocation)));
+				thisrisk *= 1 + Math.abs(Math.cos(angle(myLocation, point) - angle(e, myLocation)));
 			}
 			risk += thisrisk;
 		} while (enum1.hasMoreElements());
@@ -180,23 +162,20 @@ public class Spec extends AdvancedRobot {
 		enemy.energy = e.getEnergy();
 		enemy.lastSeen = 0;
 		// advanceTime(timeModifier);
-		enemy.setLocation(projectPoint(myLocation,
-				getHeadingRadians() + e.getBearingRadians(), e.getDistance()));
-		if (currentTarget == null
-				|| targetability(enemy) < targetability(currentTarget) - 100) {
+		enemy.setLocation(projectPoint(myLocation, getHeadingRadians() + e.getBearingRadians(), e.getDistance()));
+		if (currentTarget == null || targetability(enemy) < targetability(currentTarget) - 100) {
 			currentTarget = enemy;
 		}
-		
+
 		LinkedHashMap<String, Double> ehm = enemyHashMap;
-		 
-	    ehm.put(name, getHeadingRadians() + e.getBearingRadians());
-	 
-	    if ((name == sought || sought == null) && ehm.size() == getOthers()) {
-		scanDir = Utils.normalRelativeAngle(ehm.values().iterator().next()
-	            - getRadarHeadingRadians());
-	        sought = ehm.keySet().iterator().next();
-	    }
-	 
+
+		ehm.put(name, getHeadingRadians() + e.getBearingRadians());
+
+		if ((name == sought || sought == null) && ehm.size() == getOthers()) {
+			scanDir = Utils.normalRelativeAngle(ehm.values().iterator().next() - getRadarHeadingRadians());
+			sought = ehm.keySet().iterator().next();
+		}
+
 	}
 
 	/*
@@ -247,7 +226,7 @@ public class Spec extends AdvancedRobot {
 			currentTarget = null;
 		}
 		enemyHashMap.remove(e.getName());
-	    sought = null;
+		sought = null;
 	}
 
 	// utility functions below:
@@ -256,8 +235,7 @@ public class Spec extends AdvancedRobot {
 	// and the angle it is at from the normal
 	// (calculated by getHeadingRadians() and getBeraingRadians)
 	// and the distance between the intended point and the starting point
-	private static Point2D projectPoint(Point2D startPoint, double theta,
-			double dist) {
+	private static Point2D projectPoint(Point2D startPoint, double theta, double dist) {
 		return new Point2D.Double(startPoint.getX() + dist * Math.sin(theta),
 				startPoint.getY() + dist * Math.cos(theta));
 	}
@@ -265,8 +243,7 @@ public class Spec extends AdvancedRobot {
 	// returns the angle formed by the line connecting these two points with the
 	// normal (-pi/2 -> pi/2)
 	public static double angle(Point2D point2, Point2D point1) {
-		return Math.atan2(point2.getX() - point1.getX(),
-				point2.getY() - point1.getY());
+		return Math.atan2(point2.getX() - point1.getX(), point2.getY() - point1.getY());
 	}
 
 	public double linearTargeting() {
@@ -303,31 +280,23 @@ public class Spec extends AdvancedRobot {
 		double deltaTime = 0;
 		System.out.println("Heading: " + currentTarget.heading);
 		System.out.println("velocity: " + currentTarget.velocity);
-		while ((++deltaTime) * (bulletVelocity) < Point2D.Double.distance(myX,
-				myY, predictedX, predictedY)) {
-			predictedX += Math.sin(currentTarget.heading)
-					* currentTarget.velocity;
-			predictedY += Math.cos(currentTarget.heading)
-					* currentTarget.velocity;
+		while ((++deltaTime) * (bulletVelocity) < Point2D.Double.distance(myX, myY, predictedX, predictedY)) {
+			predictedX += Math.sin(currentTarget.heading) * currentTarget.velocity;
+			predictedY += Math.cos(currentTarget.heading) * currentTarget.velocity;
 		}
-			if (predictedX < 18.0 || predictedY < 18.0
-					|| predictedX > battleFieldWidth - 18.0
-					|| predictedY > battleFieldHeight - 18.0) {
-				// the first Math.max prevents aiming beyond the battlefield
-				// (robot width is 36 pixels and so it aims for the center,
-				// 18pixels off from the wall
-				predictedX = Math.min(Math.max(18.0, predictedX),
-						battleFieldWidth - 18.0);
-				predictedY = Math.min(Math.max(18.0, predictedY),
-						battleFieldHeight - 18.0);
+		if (predictedX < 18.0 || predictedY < 18.0 || predictedX > battleFieldWidth - 18.0
+				|| predictedY > battleFieldHeight - 18.0) {
+			// the first Math.max prevents aiming beyond the battlefield
+			// (robot width is 36 pixels and so it aims for the center,
+			// 18pixels off from the wall
+			predictedX = Math.min(Math.max(18.0, predictedX), battleFieldWidth - 18.0);
+			predictedY = Math.min(Math.max(18.0, predictedY), battleFieldHeight - 18.0);
 		}
 		// set these equal to the current enemyX and enemyY for now and add
 
-		double theta = Utils.normalRelativeAngle(Math.atan2(predictedX - myX,
-				predictedY - myY));
-		return(Utils.normalRelativeAngle(theta - getGunHeadingRadians()));
-//		setTurnGunRightRadians(Utils.normalRelativeAngle(theta - getGunHeadingRadians()));
-		}
+		double theta = Utils.normalRelativeAngle(Math.atan2(predictedX - myX, predictedY - myY));
+		return (Utils.normalRelativeAngle(theta - getGunHeadingRadians()));
+		// setTurnGunRightRadians(Utils.normalRelativeAngle(theta -
+		// getGunHeadingRadians()));
 	}
-
-
+}
