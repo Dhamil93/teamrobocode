@@ -91,6 +91,8 @@ public class RobotMarley extends TeamRobot{
  
 	public void onScannedRobot(ScannedRobotEvent e) {
 		// Calculate exact location of the robot
+		
+		if (!isTeammate(e.getName())) {
 		double absoluteBearing = getHeading() + e.getBearing();
 		double bearingFromGun = normalRelativeAngleDegrees(absoluteBearing - getGunHeading());
 		double bearingFromRadar = normalRelativeAngleDegrees(absoluteBearing - getRadarHeading());
@@ -129,6 +131,7 @@ public class RobotMarley extends TeamRobot{
 		// is not turning.  Otherwise, scan is called automatically.
 		if (bearingFromGun == 0) {
 			scan();
+		}
 		}
 	}		
  
