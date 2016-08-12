@@ -9,8 +9,10 @@ package robots;
 
 
 import robocode.*;
+import robocode.util.*;
 
 import java.awt.*;
+import java.io.IOException;
 
 
 /**
@@ -21,7 +23,7 @@ import java.awt.*;
  * @author Mathew A. Nelson (original)
  * @author Flemming N. Larsen (contributor)
  */
-public class WallsTeammate extends TeamRobot {
+public class WallsLeader extends TeamRobot {
 
 	boolean peek; // Don't turn if there's a robot there
 	double moveAmount; // How much to move
@@ -30,6 +32,7 @@ public class WallsTeammate extends TeamRobot {
 	 * run: Move around the walls
 	 */
 	public void run() {
+
 		// Set colors
 		setBodyColor(Color.black);
 		setGunColor(Color.black);
@@ -46,6 +49,7 @@ public class WallsTeammate extends TeamRobot {
 		// getHeading() % 90 means the remainder of
 		// getHeading() divided by 90.
 		turnLeft(getHeading() % 90);
+
 		ahead(moveAmount);
 		// Turn the gun to turn right 90 degrees.
 		peek = true;
@@ -82,6 +86,27 @@ public class WallsTeammate extends TeamRobot {
 	 */
 	public void onScannedRobot(ScannedRobotEvent e) {
 		if(!isTeammate(e.getName())){
+			/*
+			 * 		setAdjustRadarForRobotTurn(true);
+					double radarTurn =
+			        // Absolute bearing to target
+			        getHeadingRadians() + e.getBearingRadians()
+			        // Subtract current radar heading to get turn required
+			        - getRadarHeadingRadians();
+					setTurnRadarRightRadians(1.9*Utils.normalRelativeAngle(radarTurn));
+			*/
+			// Calculate enemy bearing
+			double enemyBearing = this.getHeading() + e.getBearing();
+			// Calculate enemy's position
+			double enemyX = getX() + e.getDistance() * Math.sin(Math.toRadians(enemyBearing));
+			double enemyY = getY() + e.getDistance() * Math.cos(Math.toRadians(enemyBearing));
+			try {
+				// Send enemy position to teammates
+				broadcastMessage(new Point(enemyX, enemyY));
+			} catch (IOException ex) {
+				out.println("Unable to send order: ");
+				ex.printStackTrace(out);
+			}
 			fire(3);
 		}
 		// Note that scan is called automatically when the robot is moving.
@@ -89,6 +114,15 @@ public class WallsTeammate extends TeamRobot {
 		// wall, so that we do not start moving up it until it's gone.
 		if (peek) {
 			scan();
+		}
+	}
+	public void onDeath(DeathEvent e){
+		try {
+			// Send enemy position to teammates
+			broadcastMessage(true);
+		} catch (IOException ex) {
+			out.println("Unable to send order: ");
+			ex.printStackTrace(out);
 		}
 	}
 }
