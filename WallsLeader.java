@@ -32,7 +32,6 @@ public class WallsLeader extends TeamRobot {
 	 * run: Move around the walls
 	 */
 	public void run() {
-
 		// Set colors
 		setBodyColor(Color.black);
 		setGunColor(Color.black);

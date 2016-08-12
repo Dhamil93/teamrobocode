@@ -5,12 +5,11 @@
  * which accompanies this distribution, and is available at
  * http://robocode.sourceforge.net/license/epl-v10.html
  */
-package sample;
+package robots;
 
 
-import robocode.HitRobotEvent;
-import robocode.Robot;
-import robocode.ScannedRobotEvent;
+import robocode.*;
+import static robocode.util.Utils.*;
 
 import java.awt.*;
 
@@ -23,7 +22,7 @@ import java.awt.*;
  * @author Mathew A. Nelson (original)
  * @author Flemming N. Larsen (contributor)
  */
-public class Walls extends TeamRobot implements Droid {
+public class WallDroid extends TeamRobot implements Droid {
 
 	boolean peek; // Don't turn if there's a robot there
 	double moveAmount; // How much to move
@@ -104,7 +103,7 @@ public class Walls extends TeamRobot implements Droid {
 		else if (e.getMessage() instanceof Boolean){}
 			Boolean leaderDeath = (Boolean) e.getMessage();
 			if(leaderDeath){
-				leaderDeathCount++
+				leaderDeathCount++;
 			}
 			if(leaderDeathCount > 1){
 				while(true){
@@ -113,4 +112,4 @@ public class Walls extends TeamRobot implements Droid {
 			}
 		}
 	}
-}
+
