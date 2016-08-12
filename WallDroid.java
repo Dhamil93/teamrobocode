@@ -100,15 +100,17 @@ public class WallDroid extends TeamRobot implements Droid {
 			setScanColor(c.scanColor);
 			setBulletColor(c.bulletColor);
 		}
-		else if (e.getMessage() instanceof Boolean){}
+		else if (e.getMessage() instanceof Boolean){
 			Boolean leaderDeath = (Boolean) e.getMessage();
 			if(leaderDeath){
 				leaderDeathCount++;
 			}
 			if(leaderDeathCount > 1){
 				while(true){
+					setTurnGunLeft(9999999);	
 					fire(1);
 				}
+			}
 			}
 		}
 	}
