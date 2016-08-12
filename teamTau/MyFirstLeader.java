@@ -1,4 +1,3 @@
-
 /**
  * Copyright (c) 2001-2016 Mathew A. Nelson and Robocode contributors
  * All rights reserved. This program and the accompanying materials
@@ -6,7 +5,7 @@
  * which accompanies this distribution, and is available at
  * http://robocode.sourceforge.net/license/epl-v10.html
  */
-package sampleteam;
+package robopackage;
 
 
 import robocode.HitByBulletEvent;
@@ -34,7 +33,7 @@ public class MyFirstLeader extends TeamRobot {
 		// Prepare RobotColors object
 		RobotColors c = new RobotColors();
 
-		c.bodyColor = Color.green;
+		c.bodyColor = Color.blue;
 		c.gunColor = Color.red;
 		c.radarColor = Color.red;
 		c.scanColor = Color.yellow;
@@ -51,6 +50,16 @@ public class MyFirstLeader extends TeamRobot {
 			broadcastMessage(c);
 		} catch (IOException ignored) {}
 		// Normal behavior
+		
+		setTurnRadarRight(10000);
+		turnRight(90-getHeading());
+		setTurnRadarRight(10000);
+		ahead((getBattleFieldWidth()-getX())-20);
+		setTurnRadarRight(10000);
+		turnRight(0-getHeading());
+		setTurnRadarRight(10000);
+		ahead((getBattleFieldHeight()-getY())-20);
+		
 		while (true) {
 			setTurnRadarRight(10000);
 			ahead(100);
@@ -85,6 +94,6 @@ public class MyFirstLeader extends TeamRobot {
 	 * onHitByBullet:  Turn perpendicular to bullet path
 	 */
 	public void onHitByBullet(HitByBulletEvent e) {
-		turnLeft(90 - e.getBearing());
+		//turnLeft(90 - e.getBearing());
 	}
 }
