@@ -1,4 +1,4 @@
-package supersample;
+package Epsilon;
  
 import robocode.*;
 import java.awt.*;
@@ -26,10 +26,10 @@ public class SuperSpinBot extends TeamRobot {
 	public void run(){
 	
 	// Set colors
-		setBodyColor(new Color(255,0,158));
-		setGunColor(new Color(255,0,158));
-		setRadarColor(new Color(255,0,158));
-		setScanColor(new Color(255,0,158));
+		setBodyColor(new Color(148,0,211));
+		setGunColor(new Color(148,0,211));
+		setRadarColor(new Color(148,0,211));
+		setScanColor(new Color(148,0,211));
  
 		setAdjustGunForRobotTurn(true);
 		setAdjustRadarForGunTurn(true);
