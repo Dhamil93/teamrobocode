@@ -28,11 +28,14 @@ public class ER extends TeamRobot
 		while(true) {
 			// Replace the next 4 lines with any behavior you would like
 			setTurnRadarRight(10000);
-			back(100);
+			back(75);
 			if (x!=0) shoot();
-			ahead(100);
+			back(75);
 			if (x!=0) shoot();
-			
+			ahead(75);
+			if (x!=0) shoot();
+			ahead(75);
+			if (x!=0) shoot();
 			
 		}
 	}
