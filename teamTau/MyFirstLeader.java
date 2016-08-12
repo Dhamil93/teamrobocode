@@ -1,3 +1,4 @@
+
 /**
  * Copyright (c) 2001-2016 Mathew A. Nelson and Robocode contributors
  * All rights reserved. This program and the accompanying materials
@@ -33,7 +34,7 @@ public class MyFirstLeader extends TeamRobot {
 		// Prepare RobotColors object
 		RobotColors c = new RobotColors();
 
-		c.bodyColor = Color.red;
+		c.bodyColor = Color.green;
 		c.gunColor = Color.red;
 		c.radarColor = Color.red;
 		c.scanColor = Color.yellow;
